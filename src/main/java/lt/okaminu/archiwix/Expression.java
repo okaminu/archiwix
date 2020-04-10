@@ -1,42 +1,29 @@
 package lt.okaminu.archiwix;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Expression {
-    public void interpret(Context context) {
-        if (context.getInput().startsWith("EQUAL")) {
-            Matcher matcher = Pattern.compile(
-                    "(EQUAL)\\((id|title|content|views|timestamp),([\"\\sa-zA-Z1-9-]+)\\)"
-            ).matcher(context.getInput());
+public abstract class Expression {
+    public final void interpret(Context context) {
+        if (context.getInput().startsWith(getOperator())) {
+            Matcher matcher = Pattern.compile(getPattern()).matcher(context.getInput());
 
             if (matcher.find()) {
-                String attributeName = matcher.group(2);
-                String attributeValue = matcher.group(3);
-                if (attributeName.equals("id")) {
-                    context.setOutput(record -> record.getId().equals(attributeValue.replaceAll("\"", "")));
-                }
-
-                if (attributeName.equals("title")) {
-                    context.setOutput(record -> record.getTitle().equals(attributeValue.replaceAll("\"", "")));
-                }
-
-                if (attributeName.equals("content")) {
-                    context.setOutput(record -> record.getContent().equals(attributeValue.replaceAll("\"", "")));
-                }
-
-                if (attributeName.equals("views")) {
-                    context.setOutput(record -> record.getViews() == Integer.parseInt(attributeValue));
-                }
-
-                if (attributeName.equals("timestamp")) {
-                    context.setOutput(record -> record.getTimestamp() == Integer.parseInt(attributeValue));
-                }
-
-                context.setInput(context.getInput().replaceFirst("(EQUAL)\\((id|title|content|views|timestamp),([\"\\sa-zA-Z1-9-]+)\\)", ""));
+                interpret(context, matcher.group(2), matcher.group(3));
+                context.setInput(context.getInput().replaceFirst(getPattern(), ""));
             } else {
                 throw new InvalidQueryException();
             }
         }
     }
+
+    protected abstract void interpret(Context context, String attributeName, String attributeValue);
+
+    @NotNull
+    protected abstract String getPattern();
+
+    @NotNull
+    protected abstract String getOperator();
 }
