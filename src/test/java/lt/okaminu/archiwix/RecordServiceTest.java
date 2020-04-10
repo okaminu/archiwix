@@ -74,4 +74,89 @@ public class RecordServiceTest {
         assertEquals(1, actualRecords.size());
         assertSame(updatedRecord, actualRecords.iterator().next());
     }
+
+    @Test
+    public void doesNotFindWhenCriteriaDoesNotMatch() {
+        Record greenRecord = new Record("green-id123");
+
+        recordService.save(greenRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(id,\"yellow\")");
+
+        assertEquals(of(), actualRecords);
+    }
+
+    @Test
+    public void findsById() {
+        Record greenRecord = new Record("green-id123");
+        Record blueRecord = new Record("blue-id123");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(id,\"green-id123\")");
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByTitle() {
+        Record greenRecord = new Record("greenId", "Green Title");
+        Record blueRecord = new Record("blueId", "Blue Title");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(title,\"Blue Title\")");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByContent() {
+        Record greenRecord = new Record("greenId", "", "Green Content");
+        Record blueRecord = new Record("blueId", "", "Blue Content");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(content,\"Blue Content\")");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByViews() {
+        Record greenRecord = new Record("greenId", "", "", 123);
+        Record blueRecord = new Record("blueId", "", "", 321);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(views,321)");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByTimestamp() {
+        Record greenRecord = new Record("greenId", "", "", 0, 1333333333);
+        Record blueRecord = new Record("blueId", "", "", 0, 1222222222);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("EQUAL(timestamp,1222222222)");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void throwsExceptionWhenQueryIsInvalid() {
+        Record greenRecord = new Record("green-id123");
+
+        recordService.save(greenRecord);
+
+        assertThrowsInvalidQueryException("");
+        assertThrowsInvalidQueryException("WHEN(id,\"green-id123\")");
+        assertThrowsInvalidQueryException("EQUAL(,\"green-id123\")");
+        assertThrowsInvalidQueryException("EQUAL(id,)");
+        assertThrowsInvalidQueryException("EQUAL(id,\"green-id123\"");
+        assertThrowsInvalidQueryException("EQUAL(space,\"green-id123\")");
+        assertThrowsInvalidQueryException("EQUAL(id\"green-id123\")");
+        assertThrowsInvalidQueryException("EQUALid,\"green-id123\")");
+    }
+
+    private void assertThrowsInvalidQueryException(String query) {
+        assertThrows(InvalidQueryException.class, () -> recordService.findBy(query));
+    }
 }
