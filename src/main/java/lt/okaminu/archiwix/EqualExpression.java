@@ -30,7 +30,7 @@ public final class EqualExpression extends Expression {
     @NotNull
     @Override
     protected String getPattern() {
-        return "(EQUAL)\\((id|title|content|views|timestamp),([\"\\sa-zA-Z1-9-]+)\\)";
+        return "("+ getOperator() +")\\((id|title|content|views|timestamp),([\"\\sa-zA-Z1-9-]+)\\)";
     }
 
     @NotNull
