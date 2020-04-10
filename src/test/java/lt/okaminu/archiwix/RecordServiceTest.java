@@ -76,6 +76,16 @@ public class RecordServiceTest {
     }
 
     @Test
+    public void doesNotFindWhenQueryIsEmpty() {
+        Record greenRecord = new Record("green-id123");
+
+        recordService.save(greenRecord);
+        Set<Record> actualRecords = recordService.findBy("");
+
+        assertEquals(of(), actualRecords);
+    }
+
+    @Test
     public void doesNotFindWhenCriteriaDoesNotMatch() {
         Record greenRecord = new Record("green-id123");
 
@@ -146,7 +156,6 @@ public class RecordServiceTest {
 
         recordService.save(greenRecord);
 
-        assertThrowsInvalidQueryException("");
         assertThrowsInvalidQueryException("WHEN(id,\"green-id123\")");
         assertThrowsInvalidQueryException("EQUAL(,\"green-id123\")");
         assertThrowsInvalidQueryException("EQUAL(id,)");
