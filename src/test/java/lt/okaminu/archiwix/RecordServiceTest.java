@@ -76,16 +76,6 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void doesNotFindWhenQueryIsEmpty() {
-        Record greenRecord = new Record("green-id123");
-
-        recordService.save(greenRecord);
-        Set<Record> actualRecords = recordService.findBy("");
-
-        assertEquals(of(), actualRecords);
-    }
-
-    @Test
     public void doesNotFindWhenCriteriaDoesNotMatch() {
         Record greenRecord = new Record("green-id123");
 
@@ -181,6 +171,7 @@ public class RecordServiceTest {
         assertThrowsInvalidQueryException("GREATER_THAN(id,\"green-id123\")");
         assertThrowsInvalidQueryException("GREATER_THAN(title\"Title\")");
         assertThrowsInvalidQueryException("GREATER_THAN(content,\"Content\")");
+        assertThrowsInvalidQueryException("GREATER_THAN(content,123)");
     }
 
     @Test
@@ -214,6 +205,7 @@ public class RecordServiceTest {
         assertThrowsInvalidQueryException("LESS_THAN(id,\"green-id123\")");
         assertThrowsInvalidQueryException("LESS_THAN(title\"Title\")");
         assertThrowsInvalidQueryException("LESS_THAN(content,\"Content\")");
+        assertThrowsInvalidQueryException("LESS_THAN(content,123)");
     }
 
     @Test
@@ -222,6 +214,7 @@ public class RecordServiceTest {
 
         recordService.save(greenRecord);
 
+        assertThrowsInvalidQueryException("");
         assertThrowsInvalidQueryException("WHEN(id,\"green-id123\")");
         assertThrowsInvalidQueryException("EQUAL(,\"green-id123\")");
         assertThrowsInvalidQueryException("EQUAL(id,)");

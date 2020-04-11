@@ -2,24 +2,26 @@ package lt.okaminu.archiwix;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Expression {
-    public final void interpret(Context context) {
-        if (context.getInput().startsWith(getOperator())) {
-            Matcher matcher = Pattern.compile(getPattern()).matcher(context.getInput());
+    public final Predicate<Record> interpret(String query) {
+        Matcher matcher = Pattern.compile(getPattern()).matcher(query);
 
-            if (matcher.find()) {
-                interpret(context, matcher.group(2), matcher.group(3));
-                context.setInput(context.getInput().replaceFirst(getPattern(), ""));
-            } else {
-                throw new InvalidQueryException();
-            }
+        if (matcher.find()) {
+            return interpret(matcher);
         }
+
+        throw new InvalidQueryException();
     }
 
-    protected abstract void interpret(Context context, String attributeName, String attributeValue);
+    public final boolean hasOperator(String query) {
+        return query.startsWith(getOperator());
+    }
+
+    protected abstract Predicate<Record> interpret(Matcher matcher);
 
     @NotNull
     protected abstract String getPattern();

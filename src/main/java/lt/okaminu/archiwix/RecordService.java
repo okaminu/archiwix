@@ -22,15 +22,15 @@ public final class RecordService {
     }
 
     public Set<Record> findBy(String query) {
-        Context context = new Context(query);
-        new LessThanExpression().interpret(context);
-        new GreaterThanExpression().interpret(context);
-        new EqualExpression().interpret(context);
+        Set<Expression> expressions = new HashSet<>();
+        expressions.add(new LessThanExpression());
+        expressions.add(new GreaterThanExpression());
+        expressions.add(new EqualExpression());
 
-        if(!context.getInput().isEmpty()) {
-            throw new InvalidQueryException();
-        }
+        for (Expression ex : expressions)
+            if (ex.hasOperator(query))
+                return records.stream().filter(ex.interpret(query)).collect(Collectors.toSet());
 
-        return records.stream().filter(context.getOutput()).collect(Collectors.toSet());
+        throw new InvalidQueryException();
     }
 }

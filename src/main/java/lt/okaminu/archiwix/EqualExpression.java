@@ -2,35 +2,41 @@ package lt.okaminu.archiwix;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+
 public final class EqualExpression extends Expression {
 
     @Override
-    protected void interpret(Context context, String attributeName, String attributeValue) {
+    protected Predicate<Record> interpret(Matcher matcher) {
+        String attributeName = matcher.group(2);
+        String attributeValue = matcher.group(3);
         if (attributeName.equals("id")) {
-            context.setOutput(record -> record.getId().equals(attributeValue.replaceAll("\"", "")));
+            return record -> record.getId().equals(attributeValue.replaceAll("\"", ""));
         }
 
         if (attributeName.equals("title")) {
-            context.setOutput(record -> record.getTitle().equals(attributeValue.replaceAll("\"", "")));
+            return record -> record.getTitle().equals(attributeValue.replaceAll("\"", ""));
         }
 
         if (attributeName.equals("content")) {
-            context.setOutput(record -> record.getContent().equals(attributeValue.replaceAll("\"", "")));
+            return record -> record.getContent().equals(attributeValue.replaceAll("\"", ""));
         }
 
         if (attributeName.equals("views")) {
-            context.setOutput(record -> record.getViews() == Integer.parseInt(attributeValue));
+            return record -> record.getViews() == Integer.parseInt(attributeValue);
         }
 
         if (attributeName.equals("timestamp")) {
-            context.setOutput(record -> record.getTimestamp() == Integer.parseInt(attributeValue));
+            return record -> record.getTimestamp() == Integer.parseInt(attributeValue);
         }
+        throw new InvalidQueryException("Attribute "+ attributeName +" cannot be used for this operation");
     }
 
     @NotNull
     @Override
     protected String getPattern() {
-        return "("+ getOperator() +")\\((id|title|content|views|timestamp),([\"\\sa-zA-Z1-9-]+)\\)";
+        return "("+ getOperator() +")\\(([a-z]+),([\"\\sa-zA-Z0-9-]+)\\)";
     }
 
     @NotNull

@@ -2,23 +2,30 @@ package lt.okaminu.archiwix;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+
 public final class LessThanExpression extends Expression {
 
     @Override
-    protected void interpret(Context context, String attributeName, String attributeValue) {
+    protected Predicate<Record> interpret(Matcher matcher) {
+        String attributeName = matcher.group(2);
+        String attributeValue = matcher.group(3);
         if (attributeName.equals("views")) {
-            context.setOutput(record -> record.getViews() < Integer.parseInt(attributeValue));
+            return record -> record.getViews() < Integer.parseInt(attributeValue);
         }
 
         if (attributeName.equals("timestamp")) {
-            context.setOutput(record -> record.getTimestamp() < Integer.parseInt(attributeValue));
+            return record -> record.getTimestamp() < Integer.parseInt(attributeValue);
         }
+
+        throw new InvalidQueryException("Attribute "+ attributeName +" cannot be used for this operation");
     }
 
     @NotNull
     @Override
     protected String getPattern() {
-        return "("+ getOperator() +")\\((views|timestamp),([\"0-9-]+)\\)";
+        return "("+ getOperator() +")\\(([a-z]+),([\"0-9]+)\\)";
     }
 
     @NotNull
