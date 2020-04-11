@@ -151,6 +151,72 @@ public class RecordServiceTest {
     }
 
     @Test
+    public void findsByGreaterThanButNotEqualsViews() {
+        Record greenRecord = new Record("greenId", "", "", 10);
+        Record blueRecord = new Record("blueId", "", "", 5);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("GREATER_THAN(views,5)");
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByGreaterThanButNotEqualsTimestamp() {
+        Record greenRecord = new Record("greenId", "", "", 0, 200);
+        Record blueRecord = new Record("blueId", "", "", 0, 300);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("GREATER_THAN(timestamp,200)");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void throwsExceptionWhenGreaterThanIsUsedForNonNumericFields() {
+        Record record = new Record("green-id123", "Title", "Content", 5, 100);
+
+        recordService.save(record);
+
+        assertThrowsInvalidQueryException("GREATER_THAN(id,\"green-id123\")");
+        assertThrowsInvalidQueryException("GREATER_THAN(title\"Title\")");
+        assertThrowsInvalidQueryException("GREATER_THAN(content,\"Content\")");
+    }
+
+    @Test
+    public void findsByLessThanButNotEqualsViews() {
+        Record greenRecord = new Record("greenId", "", "", 10);
+        Record blueRecord = new Record("blueId", "", "", 5);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("LESS_THAN(views,10)");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByLessThanButNotEqualsTimestamp() {
+        Record greenRecord = new Record("greenId", "", "", 0, 200);
+        Record blueRecord = new Record("blueId", "", "", 0, 300);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("LESS_THAN(timestamp,300)");
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void throwsExceptionWhenLessThanIsUsedForNonNumericFields() {
+        Record record = new Record("green-id123", "Title", "Content", 5, 100);
+
+        recordService.save(record);
+
+        assertThrowsInvalidQueryException("LESS_THAN(id,\"green-id123\")");
+        assertThrowsInvalidQueryException("LESS_THAN(title\"Title\")");
+        assertThrowsInvalidQueryException("LESS_THAN(content,\"Content\")");
+    }
+
+    @Test
     public void throwsExceptionWhenQueryIsInvalid() {
         Record greenRecord = new Record("green-id123");
 
@@ -163,6 +229,8 @@ public class RecordServiceTest {
         assertThrowsInvalidQueryException("EQUAL(space,\"green-id123\")");
         assertThrowsInvalidQueryException("EQUAL(id\"green-id123\")");
         assertThrowsInvalidQueryException("EQUALid,\"green-id123\")");
+        assertThrowsInvalidQueryException("GREATER_THAN(views,\"green-id123\")");
+        assertThrowsInvalidQueryException("LESS_THAN(views,\"green-id123\")");
     }
 
     private void assertThrowsInvalidQueryException(String query) {

@@ -23,6 +23,8 @@ public final class RecordService {
 
     public Set<Record> findBy(String query) {
         Context context = new Context(query);
+        new LessThanExpression().interpret(context);
+        new GreaterThanExpression().interpret(context);
         new EqualExpression().interpret(context);
 
         if(!context.getInput().isEmpty()) {
