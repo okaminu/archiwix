@@ -227,6 +227,10 @@ public class RecordServiceTest {
         assertThrowsInvalidQueryException("GREATER_THAN(views,\"green-id123\")");
         assertThrowsInvalidQueryException("LESS_THAN(views,\"green-id123\")");
         assertThrowsInvalidQueryException("NOT(views,123)");
+        assertThrowsInvalidQueryException("AND(views,123)");
+        assertThrowsInvalidQueryException("AND(EQUAL(id,\"green-id123\"))");
+        assertThrowsInvalidQueryException("OR(views,123)");
+        assertThrowsInvalidQueryException("OR(EQUAL(id,\"green-id123\"))");
     }
 
     @Test
@@ -252,7 +256,18 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void findsByNotLessThan() {
+    public void findsByTripleNegation() {
+        Record greenRecord = new Record("green-id123");
+        Record blueRecord = new Record("blue-id123");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("NOT(NOT(NOT(EQUAL(id,\"green-id123\"))))");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNotLessThanOperation() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -263,7 +278,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void findsByNotGreaterThan() {
+    public void findsByNotGreaterThanOperation() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -271,6 +286,109 @@ public class RecordServiceTest {
         Set<Record> actualRecords = recordService.findBy("NOT(GREATER_THAN(views,6))");
 
         assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByAndOperation() {
+        Record greenRecord = new Record("greenId", "RandomTitle");
+        Record blueRecord = new Record("blueId", "RandomTitle");
+
+        recordService.save(greenRecord, blueRecord);
+        String query = "AND(EQUAL(id,\"blueId\"),EQUAL(title,\"RandomTitle\"))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNotAndOperation() {
+        Record redRecord = new Record("redId", "RandomTitle");
+        Record greenRecord = new Record("greenId", "RandomTitle");
+        Record blueRecord = new Record("blueId", "SomeTitle");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "AND(EQUAL(title,\"RandomTitle\"),NOT(EQUAL(id,\"redId\")))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByDoubleNotAndOperation() {
+        Record redRecord = new Record("redId");
+        Record greenRecord = new Record("greenId");
+        Record blueRecord = new Record("blueId");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "AND(NOT(EQUAL(id,\"blueId\")),NOT(EQUAL(id,\"redId\")))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByLessAndGreaterThanOperation() {
+        Record redRecord = new Record("redId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record blueRecord = new Record("blueId", "", "", 10);
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "AND(LESS_THAN(views,8),GREATER_THAN(views,3))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByOrOperation() {
+        Record greenRecord = new Record("greenId");
+        Record blueRecord = new Record("blueId");
+        Record redRecord = new Record("redId");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "OR(EQUAL(id,\"blueId\"),EQUAL(id,\"greenId\"))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord, greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNotOrOperation() {
+        Record redRecord = new Record("redId");
+        Record greenRecord = new Record("greenId");
+        Record blueRecord = new Record("blueId");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "OR(EQUAL(id,\"redId\"),NOT(EQUAL(id,\"greenId\")))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(redRecord, blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByDoubleNotOrOperation() {
+        Record redRecord = new Record("redId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record blueRecord = new Record("blueId", "", "", 10);
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "OR(NOT(LESS_THAN(views,8)),NOT(GREATER_THAN(views,4)))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(redRecord, blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByLessOrGreaterThanOperation() {
+        Record redRecord = new Record("redId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record blueRecord = new Record("blueId", "", "", 10);
+
+        recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "OR(LESS_THAN(views,4),GREATER_THAN(views,7))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(redRecord, blueRecord), actualRecords);
     }
 
     private void assertThrowsInvalidQueryException(String query) {

@@ -7,29 +7,31 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
-public final class NotExpression extends Expression {
+public final class AndExpression extends Expression {
 
-    //Acyclic dependency here, not proud of it, but tradeoffs were made...
     private final QueryParser queryParser;
 
-    public NotExpression(QueryParser queryParser) {
+    public AndExpression(QueryParser queryParser) {
         this.queryParser = queryParser;
     }
 
     @Override
     protected Predicate<Record> interpret(Matcher matcher) {
-        return queryParser.parse(matcher.group(1)).negate();
+        Predicate<Record> firstPredicate = queryParser.parse(matcher.group(1));
+        Predicate<Record> secondPredicate = queryParser.parse(matcher.group(2));
+        return firstPredicate.and(secondPredicate);
     }
 
     @NotNull
     @Override
     protected String getPattern() {
-        return getOperator() + "\\(([\"\\s,_\\(\\)a-zA-Z0-9-]+)\\)";
+        String regexp = "\\(([A-Z_]+\\([\"\\s,_\\(\\)a-zA-Z0-9-]+\\)),([A-Z_]+\\([\"\\s,_\\(\\)a-zA-Z0-9-]+\\))\\)";
+        return getOperator() + regexp;
     }
 
     @NotNull
     @Override
     protected String getOperator() {
-        return "NOT";
+        return "AND";
     }
 }

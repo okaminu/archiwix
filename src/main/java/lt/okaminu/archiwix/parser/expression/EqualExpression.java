@@ -11,8 +11,8 @@ public final class EqualExpression extends Expression {
 
     @Override
     protected Predicate<Record> interpret(Matcher matcher) {
-        String attributeName = matcher.group(2);
-        String attributeValue = matcher.group(3);
+        String attributeName = matcher.group(1);
+        String attributeValue = matcher.group(2);
         if (attributeName.equals("id")) {
             return record -> record.getId().equals(attributeValue.replaceAll("\"", ""));
         }
@@ -38,7 +38,7 @@ public final class EqualExpression extends Expression {
     @NotNull
     @Override
     protected String getPattern() {
-        return "("+ getOperator() +")\\(([a-z]+),([\"\\sa-zA-Z0-9-]+)\\)";
+        return getOperator() + "\\(([a-z]+),([\"\\sa-zA-Z0-9-]+)\\)";
     }
 
     @NotNull

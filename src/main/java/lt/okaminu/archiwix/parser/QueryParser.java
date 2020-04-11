@@ -12,6 +12,8 @@ public final class QueryParser {
     private final Set<Expression> expressions = new HashSet<>();
 
     public QueryParser() {
+        expressions.add(new OrExpression(this));
+        expressions.add(new AndExpression(this));
         expressions.add(new NotExpression(this));
         expressions.add(new LessThanExpression());
         expressions.add(new GreaterThanExpression());
