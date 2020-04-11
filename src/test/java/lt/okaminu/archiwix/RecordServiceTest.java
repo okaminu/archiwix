@@ -224,6 +224,51 @@ public class RecordServiceTest {
         assertThrowsInvalidQueryException("EQUALid,\"green-id123\")");
         assertThrowsInvalidQueryException("GREATER_THAN(views,\"green-id123\")");
         assertThrowsInvalidQueryException("LESS_THAN(views,\"green-id123\")");
+        assertThrowsInvalidQueryException("NOT(views,123)");
+    }
+
+    @Test
+    public void findsByNotEqualId() {
+        Record greenRecord = new Record("green-id123");
+        Record blueRecord = new Record("blue-id123");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("NOT(EQUAL(id,\"green-id123\"))");
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByDoubleNegation() {
+        Record greenRecord = new Record("green-id123");
+        Record blueRecord = new Record("blue-id123");
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("NOT(NOT(EQUAL(id,\"green-id123\")))");
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNotLessThan() {
+        Record greenRecord = new Record("greenId", "", "", 10);
+        Record blueRecord = new Record("blueId", "", "", 5);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("NOT(LESS_THAN(views,6))");
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNotGreaterThan() {
+        Record greenRecord = new Record("greenId", "", "", 10);
+        Record blueRecord = new Record("blueId", "", "", 5);
+
+        recordService.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = recordService.findBy("NOT(GREATER_THAN(views,6))");
+
+        assertEquals(of(blueRecord), actualRecords);
     }
 
     private void assertThrowsInvalidQueryException(String query) {

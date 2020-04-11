@@ -23,13 +23,14 @@ public final class RecordService {
 
     public Set<Record> findBy(String query) {
         Set<Expression> expressions = new HashSet<>();
+        expressions.add(new NotExpression());
         expressions.add(new LessThanExpression());
         expressions.add(new GreaterThanExpression());
         expressions.add(new EqualExpression());
 
         for (Expression ex : expressions)
             if (ex.hasOperator(query))
-                return records.stream().filter(ex.interpret(query)).collect(Collectors.toSet());
+                return records.stream().filter(ex.interpret(query, expressions)).collect(Collectors.toSet());
 
         throw new InvalidQueryException();
     }
