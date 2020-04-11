@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordServiceTest {
 
-    private final RecordService recordService = new RecordService();
+    private final RecordService recordService = new RecordService(new QueryParser());
 
     @Test
     public void retrievesEmptyRecord() {

@@ -11,6 +11,12 @@ public final class RecordService {
 
     private final Set<Record> records = new HashSet<>();
 
+    private final QueryParser queryParser;
+
+    public RecordService(QueryParser queryParser) {
+        this.queryParser = queryParser;
+    }
+
     public void save(Record ...records) {
         Collection<Record> recordCollection = of(records);
         this.records.removeAll(recordCollection);
@@ -22,16 +28,6 @@ public final class RecordService {
     }
 
     public Set<Record> findBy(String query) {
-        Set<Expression> expressions = new HashSet<>();
-        expressions.add(new NotExpression());
-        expressions.add(new LessThanExpression());
-        expressions.add(new GreaterThanExpression());
-        expressions.add(new EqualExpression());
-
-        for (Expression ex : expressions)
-            if (ex.hasOperator(query))
-                return records.stream().filter(ex.interpret(query, expressions)).collect(Collectors.toSet());
-
-        throw new InvalidQueryException();
+        return records.stream().filter(queryParser.parse(query)).collect(Collectors.toSet());
     }
 }

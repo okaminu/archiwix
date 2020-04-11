@@ -2,14 +2,13 @@ package lt.okaminu.archiwix;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
 public final class EqualExpression extends Expression {
 
     @Override
-    protected Predicate<Record> interpret(Matcher matcher, Set<Expression> expressions) {
+    protected Predicate<Record> interpret(Matcher matcher) {
         String attributeName = matcher.group(2);
         String attributeValue = matcher.group(3);
         if (attributeName.equals("id")) {
