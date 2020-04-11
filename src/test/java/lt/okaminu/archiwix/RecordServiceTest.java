@@ -1,5 +1,7 @@
 package lt.okaminu.archiwix;
 
+import lt.okaminu.archiwix.parser.InvalidQueryException;
+import lt.okaminu.archiwix.parser.QueryParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

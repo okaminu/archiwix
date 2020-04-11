@@ -1,11 +1,11 @@
-package lt.okaminu.archiwix;
+package lt.okaminu.archiwix.parser;
 
 public final class InvalidQueryException extends RuntimeException {
-    protected InvalidQueryException() {
+    public InvalidQueryException() {
         super();
     }
 
-    protected InvalidQueryException(String message) {
+    public InvalidQueryException(String message) {
         super(message);
     }
 }

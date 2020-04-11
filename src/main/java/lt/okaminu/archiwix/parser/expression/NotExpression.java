@@ -1,5 +1,7 @@
-package lt.okaminu.archiwix;
+package lt.okaminu.archiwix.parser.expression;
 
+import lt.okaminu.archiwix.Record;
+import lt.okaminu.archiwix.parser.QueryParser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -9,7 +11,7 @@ public final class NotExpression extends Expression {
 
     private final QueryParser queryParser;
 
-    protected NotExpression(QueryParser queryParser) {
+    public NotExpression(QueryParser queryParser) {
         this.queryParser = queryParser;
     }
 

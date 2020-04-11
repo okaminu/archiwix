@@ -1,5 +1,7 @@
-package lt.okaminu.archiwix;
+package lt.okaminu.archiwix.parser.expression;
 
+import lt.okaminu.archiwix.Record;
+import lt.okaminu.archiwix.parser.InvalidQueryException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -7,14 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Expression {
-    protected final Predicate<Record> interpret(String query) {
+    public final Predicate<Record> interpret(String query) {
         Matcher matcher = Pattern.compile(getPattern()).matcher(query);
         if (matcher.find()) return interpret(matcher);
 
         throw new InvalidQueryException();
     }
 
-    protected final boolean hasOperator(String query) {
+    public final boolean hasOperator(String query) {
         return query.startsWith(getOperator());
     }
 

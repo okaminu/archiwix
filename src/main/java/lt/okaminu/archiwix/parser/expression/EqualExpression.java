@@ -1,5 +1,7 @@
-package lt.okaminu.archiwix;
+package lt.okaminu.archiwix.parser.expression;
 
+import lt.okaminu.archiwix.Record;
+import lt.okaminu.archiwix.parser.InvalidQueryException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;

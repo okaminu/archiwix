@@ -1,5 +1,7 @@
 package lt.okaminu.archiwix;
 
+import lt.okaminu.archiwix.parser.QueryParser;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
