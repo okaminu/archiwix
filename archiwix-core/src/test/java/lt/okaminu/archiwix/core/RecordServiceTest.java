@@ -39,9 +39,9 @@ public class RecordServiceTest {
     public void appendsRecordsToExistingOnes() {
         Record record1 = new Record("xbox", "Title");
         Record record2 = new Record("playstation", "Title");
-
         recordService.save(record1);
         recordService.save(record2);
+
         Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record1, record2), actualRecords);
@@ -49,9 +49,9 @@ public class RecordServiceTest {
 
     @Test
     public void storesUniqueRecordsByInstance() {
-        Record record = new Record("someId");
-
+        Record record = new Record();
         recordService.save(record, record);
+
         Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record), actualRecords);
@@ -61,8 +61,8 @@ public class RecordServiceTest {
     public void storesUniqueRecordsById() {
         Record record = new Record("someId");
         Record duplicateRecord = new Record("someId");
-
         recordService.save(record, duplicateRecord);
+
         Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record), actualRecords);
@@ -70,11 +70,11 @@ public class RecordServiceTest {
 
     @Test
     public void overwritesRecordWhenNewRecordIsWithSameId() {
-        Record record = new Record("someId");
-        Record updatedRecord = new Record("someId");
-
+        Record record = new Record();
+        Record updatedRecord = new Record();
         recordService.save(record);
         recordService.save(updatedRecord);
+
         Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(1, actualRecords.size());
@@ -86,8 +86,8 @@ public class RecordServiceTest {
         RecordService service = new RecordService(new QueryParser());
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
-
         service.save(greenRecord, blueRecord);
+
         Set<Record> actualRecords = service.findBy("EQUAL(id,\"green-id123\")");
 
         assertEquals(of(greenRecord), actualRecords);

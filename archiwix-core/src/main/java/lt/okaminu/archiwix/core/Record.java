@@ -10,6 +10,10 @@ public final class Record {
     private final int views;
     private final int timestamp;
 
+    public Record() {
+        this("");
+    }
+
     public Record(@NotNull String id) {
         this(id, "", "");
     }
