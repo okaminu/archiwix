@@ -21,10 +21,10 @@ public abstract class CompositeExpression extends Expression {
         String subQuery = matcher.group(1);
         int index = findExpressionSeparatorIndex(subQuery);
 
-        Predicate<Record> firstPredicate = queryParser.parse(subQuery.substring(0, index));
-        Predicate<Record> secondPredicate = queryParser.parse(subQuery.substring(index + 1));
-
-        return joinPredicates(firstPredicate, secondPredicate);
+        return joinPredicates(
+                queryParser.parse(subQuery.substring(0, index)),
+                queryParser.parse(subQuery.substring(index + 1))
+        );
     }
 
     @NotNull
@@ -35,10 +35,10 @@ public abstract class CompositeExpression extends Expression {
 
     protected abstract Predicate<Record> joinPredicates(Predicate<Record> first, Predicate<Record> second);
 
-    private int findExpressionSeparatorIndex(String subQuery) {
+    private int findExpressionSeparatorIndex(String query) {
         int openedParentheses = 0;
-        for (int i = 0; i < subQuery.length(); i++) {
-            String character = String.valueOf(subQuery.charAt(i));
+        for (int i = 0; i < query.length(); i++) {
+            String character = String.valueOf(query.charAt(i));
             openedParentheses = character.equals("(") ? openedParentheses + 1 : openedParentheses;
             openedParentheses = character.equals(")") ? openedParentheses - 1 : openedParentheses;
 

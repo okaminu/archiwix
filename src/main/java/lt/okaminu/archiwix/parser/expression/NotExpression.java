@@ -11,8 +11,8 @@ public final class NotExpression extends Expression {
 
     private final QueryParser queryParser;
 
-    public NotExpression(QueryParser queryParser) {
-        this.queryParser = queryParser;
+    public NotExpression(QueryParser parser) {
+        this.queryParser = parser;
     }
 
     @Override

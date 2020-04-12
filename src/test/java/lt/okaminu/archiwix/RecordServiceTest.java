@@ -1,43 +1,48 @@
 package lt.okaminu.archiwix;
 
 import lt.okaminu.archiwix.parser.QueryParser;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
 import static java.util.Set.of;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class RecordServiceTest {
 
-    private final RecordService recordService = new RecordService(new QueryParser());
+    @Mock(lenient = true)
+    private QueryParser queryParserStub;
 
-    @Test
-    public void retrievesEmptyRecord() {
-        Set<Record> actualRecords = recordService.findAll();
+    private RecordService recordService;
 
-        assertTrue(actualRecords.isEmpty());
+    @BeforeEach
+    public void setUp() {
+        recordService = new RecordService(queryParserStub);
+        when(queryParserStub.parse("QUERY")).thenReturn(record -> true);
     }
 
     @Test
-    public void retrievesStoredRecords() {
-        Record record1 = new Record("xbox");
-        Record record2 = new Record("playstation");
+    public void retrievesEmptyRecord() {
+        Set<Record> actualRecords = recordService.findBy("QUERY");
 
-        recordService.save(record1, record2);
-        Set<Record> actualRecords = recordService.findAll();
-
-        assertEquals(of(record1, record2), actualRecords);
+        assertEquals(of(), actualRecords);
     }
 
     @Test
     public void appendsRecordsToExistingOnes() {
-        Record record1 = new Record("xbox");
-        Record record2 = new Record("playstation");
+        Record record1 = new Record("xbox", "Title");
+        Record record2 = new Record("playstation", "Title");
 
         recordService.save(record1);
         recordService.save(record2);
-        Set<Record> actualRecords = recordService.findAll();
+        Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record1, record2), actualRecords);
     }
@@ -47,7 +52,7 @@ public class RecordServiceTest {
         Record record = new Record("someId");
 
         recordService.save(record, record);
-        Set<Record> actualRecords = recordService.findAll();
+        Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record), actualRecords);
     }
@@ -58,7 +63,7 @@ public class RecordServiceTest {
         Record duplicateRecord = new Record("someId");
 
         recordService.save(record, duplicateRecord);
-        Set<Record> actualRecords = recordService.findAll();
+        Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(of(record), actualRecords);
     }
@@ -70,7 +75,7 @@ public class RecordServiceTest {
 
         recordService.save(record);
         recordService.save(updatedRecord);
-        Set<Record> actualRecords = recordService.findAll();
+        Set<Record> actualRecords = recordService.findBy("QUERY");
 
         assertEquals(1, actualRecords.size());
         assertSame(updatedRecord, actualRecords.iterator().next());
@@ -78,11 +83,12 @@ public class RecordServiceTest {
 
     @Test
     public void retrievesRecordsByQuery() {
+        RecordService service = new RecordService(new QueryParser());
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
-        recordService.save(greenRecord, blueRecord);
-        Set<Record> actualRecords = recordService.findBy("EQUAL(id,\"green-id123\")");
+        service.save(greenRecord, blueRecord);
+        Set<Record> actualRecords = service.findBy("EQUAL(id,\"green-id123\")");
 
         assertEquals(of(greenRecord), actualRecords);
     }

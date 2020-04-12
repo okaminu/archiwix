@@ -12,14 +12,14 @@ import java.util.regex.Matcher;
 
 public final class EqualExpression extends Expression {
 
-    private final Map<String, BiPredicate<String, Record>> actionMap = new HashMap<>();
+    private final Map<String, BiPredicate<String, Record>> matcherMap = new HashMap<>();
 
     public EqualExpression() {
-        actionMap.put("id", (String value, Record record) -> record.getId().equals(value.replaceAll("\"", "")));
-        actionMap.put("title", (String value, Record record) -> record.getTitle().equals(value.replaceAll("\"", "")));
-        actionMap.put("views", (String value, Record record) -> equals(value, record.getViews()));
-        actionMap.put("timestamp", (String value, Record record) -> equals(value, record.getTimestamp()));
-        actionMap.put(
+        matcherMap.put("id", (String value, Record record) -> record.getId().equals(value.replaceAll("\"", "")));
+        matcherMap.put("title", (String value, Record record) -> record.getTitle().equals(value.replaceAll("\"", "")));
+        matcherMap.put("views", (String value, Record record) -> equals(value, record.getViews()));
+        matcherMap.put("timestamp", (String value, Record record) -> equals(value, record.getTimestamp()));
+        matcherMap.put(
                 "content",
                 (String value, Record record) -> record.getContent().equals(value.replaceAll("\"", ""))
         );
@@ -30,8 +30,8 @@ public final class EqualExpression extends Expression {
         String attributeName = matcher.group(1);
         String attributeValue = matcher.group(2);
 
-        if (actionMap.containsKey(attributeName))
-            return record -> actionMap.get(attributeName).test(attributeValue, record);
+        if (matcherMap.containsKey(attributeName))
+            return record -> matcherMap.get(attributeName).test(attributeValue, record);
 
         throw new InvalidQueryException("Attribute "+ attributeName +" cannot be used for this operation");
     }

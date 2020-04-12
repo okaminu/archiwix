@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public final class QueryParser {
+public class QueryParser {
 
     private final Set<Expression> expressions = new HashSet<>();
 

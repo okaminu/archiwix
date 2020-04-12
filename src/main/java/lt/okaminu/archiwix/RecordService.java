@@ -25,10 +25,6 @@ public final class RecordService {
         this.records.addAll(recordCollection);
     }
 
-    public Set<Record> findAll() {
-        return records;
-    }
-
     public Set<Record> findBy(String query) {
         return records.stream().filter(queryParser.parse(query)).collect(Collectors.toSet());
     }

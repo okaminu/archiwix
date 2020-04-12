@@ -1,6 +1,5 @@
 package lt.okaminu.archiwix;
 
-
 import org.jetbrains.annotations.NotNull;
 
 public final class Record {
