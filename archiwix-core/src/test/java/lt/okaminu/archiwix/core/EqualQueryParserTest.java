@@ -1,6 +1,5 @@
 package lt.okaminu.archiwix.core;
 
-import lt.okaminu.archiwix.core.Record;
 import lt.okaminu.archiwix.core.parser.InvalidQueryException;
 import lt.okaminu.archiwix.core.parser.QueryParser;
 import org.junit.jupiter.api.Test;
