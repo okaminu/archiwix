@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 
 public final class NotExpression extends Expression {
 
-    //Acyclic dependency here, not proud of it, but tradeoffs were made...
     private final QueryParser queryParser;
 
     public NotExpression(QueryParser queryParser) {
