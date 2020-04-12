@@ -340,6 +340,38 @@ public class RecordServiceTest {
     }
 
     @Test
+    public void findsByOneNestedAndOperation() {
+        Record yellowRecord = new Record("yellowId", "RandomTitle", "InterestingContent");
+        Record greenRecord = new Record("greenId", "RandomTitle", "BoringContent", 5);
+        Record redRecord = new Record("redId", "RandomTitle", "BoringContent", 10);
+        Record blueRecord = new Record("blueId", "SomeTitle");
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord);
+        String subExpression = "AND(EQUAL(title,\"RandomTitle\"),EQUAL(content,\"BoringContent\")";
+        String query = "AND(" + subExpression + "),LESS_THAN(views,8))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByTwoNestedAndOperations() {
+        Record yellowRecord = new Record("yellowId", "RandomTitle", "InterestingContent");
+        Record whiteRecord = new Record("whiteId", "RandomTitle", "BoringContent", 2);
+        Record greenRecord = new Record("greenId", "RandomTitle", "BoringContent", 5);
+        Record redRecord = new Record("redId", "RandomTitle", "BoringContent", 10);
+        Record blueRecord = new Record("blueId", "SomeTitle");
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
+        String subExpression1 = "AND(EQUAL(title,\"RandomTitle\"),EQUAL(content,\"BoringContent\"))";
+        String subExpression2 = "AND(LESS_THAN(views,8),GREATER_THAN(views,3))";
+        String query = "AND(" + subExpression1 + "," + subExpression2 + ")";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord), actualRecords);
+    }
+
+    @Test
     public void findsByOrOperation() {
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
@@ -389,6 +421,37 @@ public class RecordServiceTest {
         Set<Record> actualRecords = recordService.findBy(query);
 
         assertEquals(of(redRecord, blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByOneNestedOrOperation() {
+        Record blueRecord = new Record("blueId", "", "", 1);
+        Record yellowRecord = new Record("yellowId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record redRecord = new Record("redId", "", "", 10);
+
+        recordService.save(greenRecord, yellowRecord, redRecord, blueRecord);
+        String query = "OR(OR(EQUAL(id,\"yellowId\"),EQUAL(id,\"greenId\")),GREATER_THAN(views,8))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(yellowRecord, greenRecord, redRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByTwoNestedOrOperations() {
+        Record blueRecord = new Record("blueId", "", "", 1);
+        Record yellowRecord = new Record("yellowId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record redRecord = new Record("redId", "", "", 7);
+        Record whiteRecord = new Record("whiteId", "", "", 10);
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
+        String subExpression1 = "OR(EQUAL(id,\"yellowId\"),EQUAL(id,\"greenId\"))";
+        String subExpression2 = "OR(LESS_THAN(views,2),GREATER_THAN(views,8))";
+        String query = "OR(" + subExpression1 + "," + subExpression2 + ")";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord, yellowRecord, whiteRecord, blueRecord), actualRecords);
     }
 
     private void assertThrowsInvalidQueryException(String query) {
