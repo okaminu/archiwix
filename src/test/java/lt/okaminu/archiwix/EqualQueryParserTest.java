@@ -67,14 +67,18 @@ public class EqualQueryParserTest {
 
     @Test
     public void throwsExceptionWhenQueryIsInvalid() {
-        assertThrowsInvalidQueryException("");
-        assertThrowsInvalidQueryException("WHEN(id,\"green-id123\")");
-        assertThrowsInvalidQueryException("EQUAL(,\"green-id123\")");
-        assertThrowsInvalidQueryException("EQUAL(id,)");
-        assertThrowsInvalidQueryException("EQUAL(id,\"green-id123\"");
-        assertThrowsInvalidQueryException("EQUAL(space,\"green-id123\")");
-        assertThrowsInvalidQueryException("EQUAL(id\"green-id123\")");
-        assertThrowsInvalidQueryException("EQUALid,\"green-id123\")");
+        Record record = new Record("green-id123");
+
+        assertThrowsInvalidQueryException("", record);
+        assertThrowsInvalidQueryException("WHEN(id,\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUAL(,\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUAL(id,)", record);
+        assertThrowsInvalidQueryException("EQUAL(id,\"green-id123\"", record);
+        assertThrowsInvalidQueryException("EQUAL(space,\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUAL(id\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUAL(views,\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUAL(timestamp,\"green-id123\")", record);
+        assertThrowsInvalidQueryException("EQUALid,\"green-id123\")", record);
     }
 
     private void assertThrowsInvalidQueryException(String query, Record ...records) {

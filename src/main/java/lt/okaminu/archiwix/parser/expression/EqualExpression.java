@@ -17,8 +17,8 @@ public final class EqualExpression extends Expression {
     public EqualExpression() {
         actionMap.put("id", (String value, Record record) -> record.getId().equals(value.replaceAll("\"", "")));
         actionMap.put("title", (String value, Record record) -> record.getTitle().equals(value.replaceAll("\"", "")));
-        actionMap.put("views", (String value, Record record) -> record.getViews() == Integer.parseInt(value));
-        actionMap.put("timestamp", (String value, Record record) -> record.getTimestamp() == Integer.parseInt(value));
+        actionMap.put("views", (String value, Record record) -> equals(value, record.getViews()));
+        actionMap.put("timestamp", (String value, Record record) -> equals(value, record.getTimestamp()));
         actionMap.put(
                 "content",
                 (String value, Record record) -> record.getContent().equals(value.replaceAll("\"", ""))
@@ -46,5 +46,13 @@ public final class EqualExpression extends Expression {
     @Override
     protected String getOperator() {
         return "EQUAL";
+    }
+
+    private static boolean equals(String textNumber, int number) {
+        try {
+            return number == Integer.parseInt(textNumber);
+        } catch (NumberFormatException ex) {
+            throw new InvalidQueryException("This field accepts only numeric values");
+        }
     }
 }

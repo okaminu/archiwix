@@ -140,8 +140,10 @@ public class AndQueryParserTest {
 
     @Test
     public void throwsExceptionWhenQueryIsInvalid() {
-        assertThrowsInvalidQueryException("AND(views,123)");
-        assertThrowsInvalidQueryException("AND(EQUAL(id,\"green-id123\"))");
+        Record record = new Record("green-id123");
+
+        assertThrowsInvalidQueryException("AND(views,123)", record);
+        assertThrowsInvalidQueryException("AND(EQUAL(id,\"green-id123\"))", record);
     }
 
     private void assertThrowsInvalidQueryException(String query, Record ...records) {

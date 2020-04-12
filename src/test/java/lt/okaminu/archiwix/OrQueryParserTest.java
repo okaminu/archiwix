@@ -143,8 +143,10 @@ public class OrQueryParserTest {
 
     @Test
     public void throwsExceptionWhenQueryIsInvalid() {
-        assertThrows(InvalidQueryException.class, () -> filterRecords("OR(views,123)"));
-        assertThrows(InvalidQueryException.class, () -> filterRecords("OR(EQUAL(id,\"green-id123\"))"));
+        Record record = new Record("green-id123");
+
+        assertThrows(InvalidQueryException.class, () -> filterRecords("OR(views,123)", record));
+        assertThrows(InvalidQueryException.class, () -> filterRecords("OR(EQUAL(id,\"green-id123\"))", record));
     }
 
     private Set<Record> filterRecords(String query, Record ...records) {
