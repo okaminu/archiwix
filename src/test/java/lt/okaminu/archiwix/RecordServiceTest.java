@@ -454,6 +454,40 @@ public class RecordServiceTest {
         assertEquals(of(greenRecord, yellowRecord, whiteRecord, blueRecord), actualRecords);
     }
 
+    @Test
+    public void findsByAndNestedWithOrOperations() {
+        Record blueRecord = new Record("blueId", "", "", 1);
+        Record yellowRecord = new Record("yellowId", "", "", 2);
+        Record greenRecord = new Record("greenId", "", "", 5);
+        Record redRecord = new Record("redId", "", "", 7);
+        Record whiteRecord = new Record("whiteId", "", "", 10);
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
+        String subExpression1 = "OR(EQUAL(id,\"blueId\"),EQUAL(id,\"whiteId\"))";
+        String subExpression2 = "OR(LESS_THAN(views,3),GREATER_THAN(views,6))";
+        String query = "AND(" + subExpression1 + "," + subExpression2 + ")";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord, whiteRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByOrNestedWithAndOperations() {
+        Record blueRecord = new Record("blueId", "RandomTitle", "RandomContent", 1);
+        Record yellowRecord = new Record("yellowId", "RandomTitle", "RandomContent", 2);
+        Record greenRecord = new Record("greenId", "RandomTitle", "SomeContent", 5);
+        Record redRecord = new Record("redId", "SomeTitle", "SomeContent", 7);
+        Record whiteRecord = new Record("whiteId", "SomeTitle", "", 10);
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
+        String subExpression1 = "AND(EQUAL(title,\"RandomTitle\"),EQUAL(content,\"RandomContent\"))";
+        String subExpression2 = "AND(LESS_THAN(views,8),GREATER_THAN(views,6))";
+        String query = "OR(" + subExpression1 + "," + subExpression2 + ")";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord, yellowRecord, redRecord), actualRecords);
+    }
+
     private void assertThrowsInvalidQueryException(String query) {
         assertThrows(InvalidQueryException.class, () -> recordService.findBy(query));
     }
