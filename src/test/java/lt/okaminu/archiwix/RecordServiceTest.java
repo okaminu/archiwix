@@ -307,6 +307,19 @@ public class RecordServiceTest {
         Record blueRecord = new Record("blueId", "SomeTitle");
 
         recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "NOT(AND(EQUAL(title,\"RandomTitle\"),EQUAL(id,\"redId\")))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(greenRecord, blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNestedNotAndOperation() {
+        Record redRecord = new Record("redId", "RandomTitle");
+        Record greenRecord = new Record("greenId", "RandomTitle");
+        Record blueRecord = new Record("blueId", "SomeTitle");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
         String query = "AND(EQUAL(title,\"RandomTitle\"),NOT(EQUAL(id,\"redId\")))";
         Set<Record> actualRecords = recordService.findBy(query);
 
@@ -314,7 +327,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void findsByDoubleNotAndOperation() {
+    public void findsByNestedDoubleNotAndOperation() {
         Record redRecord = new Record("redId");
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
@@ -391,6 +404,19 @@ public class RecordServiceTest {
         Record blueRecord = new Record("blueId");
 
         recordService.save(greenRecord, blueRecord, redRecord);
+        String query = "NOT(OR(EQUAL(id,\"redId\"),EQUAL(id,\"greenId\")))";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNestedNotOrOperation() {
+        Record redRecord = new Record("redId");
+        Record greenRecord = new Record("greenId");
+        Record blueRecord = new Record("blueId");
+
+        recordService.save(greenRecord, blueRecord, redRecord);
         String query = "OR(EQUAL(id,\"redId\"),NOT(EQUAL(id,\"greenId\")))";
         Set<Record> actualRecords = recordService.findBy(query);
 
@@ -398,7 +424,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void findsByDoubleNotOrOperation() {
+    public void findsByNestedDoubleNotOrOperation() {
         Record redRecord = new Record("redId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
         Record blueRecord = new Record("blueId", "", "", 10);
@@ -482,6 +508,23 @@ public class RecordServiceTest {
         recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
         String subExpression1 = "AND(EQUAL(title,\"RandomTitle\"),EQUAL(content,\"RandomContent\"))";
         String subExpression2 = "AND(LESS_THAN(views,8),GREATER_THAN(views,6))";
+        String query = "OR(" + subExpression1 + "," + subExpression2 + ")";
+        Set<Record> actualRecords = recordService.findBy(query);
+
+        assertEquals(of(blueRecord, yellowRecord, redRecord), actualRecords);
+    }
+
+    @Test
+    public void findsByNestedAndOrWithNegationOperation() {
+        Record blueRecord = new Record("blueId", "RandomTitle", "RandomContent", 1);
+        Record yellowRecord = new Record("yellowId", "RandomTitle", "RandomContent", 2);
+        Record greenRecord = new Record("greenId", "RandomTitle", "SomeContent", 5);
+        Record redRecord = new Record("redId", "SomeTitle", "SomeContent", 7);
+        Record whiteRecord = new Record("whiteId", "SomeTitle", "", 10);
+
+        recordService.save(greenRecord, blueRecord, yellowRecord, redRecord, whiteRecord);
+        String subExpression1 = "AND(EQUAL(title,\"RandomTitle\"),EQUAL(content,\"RandomContent\"))";
+        String subExpression2 = "AND(NOT(GREATER_THAN(views,8)),NOT(LESS_THAN(views,6)))";
         String query = "OR(" + subExpression1 + "," + subExpression2 + ")";
         Set<Record> actualRecords = recordService.findBy(query);
 
