@@ -36,13 +36,14 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenGreaterThanIsUsedForNonNumericFields() {
+    public void throwsExceptionWhenGREATERQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("GREATER_THAN(id,\"green-id123\")", record);
         assertThrowsInvalidQueryException("GREATER_THAN(title\"Title\")", record);
         assertThrowsInvalidQueryException("GREATER_THAN(content,\"Content\")", record);
         assertThrowsInvalidQueryException("GREATER_THAN(content,123)", record);
+        assertThrowsInvalidQueryException("GREATER_THAN(views,\"123\")", record);
     }
 
     @Test
@@ -66,13 +67,14 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenLessThanIsUsedForNonNumericFields() {
+    public void throwsExceptionWhenLESSQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("LESS_THAN(id,\"green-id123\")", record);
         assertThrowsInvalidQueryException("LESS_THAN(title\"Title\")", record);
         assertThrowsInvalidQueryException("LESS_THAN(content,\"Content\")", record);
         assertThrowsInvalidQueryException("LESS_THAN(content,123)", record);
+        assertThrowsInvalidQueryException("LESS_THAN(views,\"123\")", record);
     }
 
     private void assertThrowsInvalidQueryException(String query, Record ...records) {

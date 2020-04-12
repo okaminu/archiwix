@@ -25,7 +25,7 @@ public final class LessThanExpression extends Expression {
     @NotNull
     @Override
     protected String getPattern() {
-        return getOperator() + "\\(([a-z]+),([\"0-9]+)\\)";
+        return getOperator() + "\\(([a-z]+),([0-9]+)\\)";
     }
 
     @NotNull
