@@ -1,0 +1,37 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "application"
+}
+
+version "1.0"
+group "archiwix"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":archiwix-core")
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation "io.micronaut:micronaut-inject"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+mainClassName = "lt.okaminu.archiwix.backend.Application"
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    mergeServiceFiles()
+}

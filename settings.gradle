@@ -1,1 +1,4 @@
 rootProject.name = 'archiwix'
+
+include 'archiwix-core'
+include 'archiwix-backend'
