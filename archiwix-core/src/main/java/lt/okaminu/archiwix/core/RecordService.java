@@ -22,7 +22,7 @@ public final class RecordService {
         this.records.addAll(of(records));
     }
 
-    public Set<Record> findBy(String query) {
+    public Set<Record> find(String query) {
         return records.stream().filter(queryParser.parse(query)).collect(Collectors.toSet());
     }
 }

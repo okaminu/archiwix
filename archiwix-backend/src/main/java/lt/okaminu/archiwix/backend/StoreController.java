@@ -19,6 +19,6 @@ public class StoreController {
 
     @Get("{?query}")
     public Set<Record> retrieve(@QueryValue("query") String val) {
-        return recordService.findBy(val);
+        return recordService.find(val);
     }
 }

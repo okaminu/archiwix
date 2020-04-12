@@ -15,7 +15,7 @@ import java.util.Set;
 import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StoreControllerSpec {
+public class StoreControllerTest {
 
     private EmbeddedServer server;
     private HttpClient client;

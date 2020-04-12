@@ -30,7 +30,7 @@ public class RecordServiceTest {
 
     @Test
     public void retrievesEmptyRecord() {
-        Set<Record> actualRecords = recordService.findBy("QUERY");
+        Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(of(), actualRecords);
     }
@@ -42,7 +42,7 @@ public class RecordServiceTest {
         recordService.save(record1);
         recordService.save(record2);
 
-        Set<Record> actualRecords = recordService.findBy("QUERY");
+        Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(of(record1, record2), actualRecords);
     }
@@ -52,7 +52,7 @@ public class RecordServiceTest {
         Record record = new Record();
         recordService.save(record, record);
 
-        Set<Record> actualRecords = recordService.findBy("QUERY");
+        Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(of(record), actualRecords);
     }
@@ -63,7 +63,7 @@ public class RecordServiceTest {
         Record duplicateRecord = new Record("someId");
         recordService.save(record, duplicateRecord);
 
-        Set<Record> actualRecords = recordService.findBy("QUERY");
+        Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(of(record), actualRecords);
     }
@@ -75,7 +75,7 @@ public class RecordServiceTest {
         recordService.save(record);
         recordService.save(updatedRecord);
 
-        Set<Record> actualRecords = recordService.findBy("QUERY");
+        Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(1, actualRecords.size());
         assertSame(updatedRecord, actualRecords.iterator().next());
@@ -88,7 +88,7 @@ public class RecordServiceTest {
         Record blueRecord = new Record("blue-id123");
         service.save(greenRecord, blueRecord);
 
-        Set<Record> actualRecords = service.findBy("EQUAL(id,\"green-id123\")");
+        Set<Record> actualRecords = service.find("EQUAL(id,\"green-id123\")");
 
         assertEquals(of(greenRecord), actualRecords);
     }
