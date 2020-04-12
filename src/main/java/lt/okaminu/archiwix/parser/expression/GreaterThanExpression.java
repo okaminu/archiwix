@@ -13,13 +13,11 @@ public final class GreaterThanExpression extends Expression {
     protected Predicate<Record> interpret(Matcher matcher) {
         String attributeName = matcher.group(1);
         String attributeValue = matcher.group(2);
-        if (attributeName.equals("views")) {
+        if (attributeName.equals("views"))
             return record -> record.getViews() > Integer.parseInt(attributeValue);
-        }
 
-        if (attributeName.equals("timestamp")) {
+        if (attributeName.equals("timestamp"))
             return record -> record.getTimestamp() > Integer.parseInt(attributeValue);
-        }
 
         throw new InvalidQueryException("Attribute "+ attributeName +" cannot be used for this operation");
     }

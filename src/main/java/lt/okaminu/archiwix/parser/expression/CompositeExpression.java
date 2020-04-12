@@ -42,9 +42,7 @@ public abstract class CompositeExpression extends Expression {
             openedParentheses = character.equals("(") ? openedParentheses + 1 : openedParentheses;
             openedParentheses = character.equals(")") ? openedParentheses - 1 : openedParentheses;
 
-            if (character.equals(",") && openedParentheses == 0) {
-                return i;
-            }
+            if (character.equals(",") && openedParentheses == 0) return i;
         }
         throw new InvalidQueryException("Missing comma that separates expressions");
     }
