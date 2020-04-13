@@ -2,8 +2,10 @@ package lt.okaminu.archiwix.backend;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
 import lt.okaminu.archiwix.core.Record;
 import org.junit.jupiter.api.AfterEach;
@@ -12,8 +14,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
+import static io.micronaut.http.HttpRequest.GET;
+import static io.micronaut.http.HttpRequest.POST;
 import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StoreControllerTest {
 
@@ -32,6 +37,26 @@ public class StoreControllerTest {
     public void stopServer() {
         server.stop();
         client.stop();
+    }
+
+    @Test
+    public void providesBadRequestStatusOnInvalidQuery() {
+        Record greenRecord = new Record("green-id123");
+        Record blueRecord = new Record("blue-id123");
+        store(greenRecord, blueRecord);
+
+        HttpClientResponseException responseException = assertThrows(
+                HttpClientResponseException.class, () -> retrieve("EQUAL(views)")
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseException.getResponse().getStatus());
+    }
+
+    @Test
+    public void providesEmptyResult() {
+        Set<Record> actualRecords = retrieve("EQUAL(id,\"green-id123\")");
+
+        assertEquals(of(), actualRecords);
     }
 
     @Test
@@ -118,14 +143,17 @@ public class StoreControllerTest {
     }
 
     private void store(Record ...records) {
-        for (Record record: of(records))
-            client.toBlocking().exchange(HttpRequest.POST("/store", record));
+        for (Record record: of(records)) {
+            HttpResponse<Set<Record>> response = client.toBlocking().exchange(POST("/store", record));
+            assertEquals(HttpStatus.OK, response.getStatus());
+        }
     }
 
     private Set<Record> retrieve(String query) {
         String encodedQuery = query.replaceAll(",", "%2C").replaceAll("\"", "%22");
-        return client
-                .toBlocking()
-                .retrieve(HttpRequest.GET("/store?query="+ encodedQuery), Argument.setOf(Record.class));
+        HttpResponse<Set<Record>> response = client.toBlocking()
+                .exchange(GET("/store?query=" + encodedQuery), Argument.setOf(Record.class));
+        assertEquals(HttpStatus.OK, response.getStatus());
+        return response.body();
     }
 }
