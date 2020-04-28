@@ -3,22 +3,19 @@ package lt.okaminu.archiwix.core.parser;
 import lt.okaminu.archiwix.core.Record;
 import lt.okaminu.archiwix.core.parser.expression.*;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
 public class QueryParser {
 
-    private final Set<Expression> expressions = new HashSet<>();
-
-    public QueryParser() {
-        expressions.add(new OrExpression(this));
-        expressions.add(new AndExpression(this));
-        expressions.add(new NotExpression(this));
-        expressions.add(new LessThanExpression());
-        expressions.add(new GreaterThanExpression());
-        expressions.add(new EqualExpression());
-    }
+    private final Set<Expression> expressions = Set.of(
+            new OrExpression(this),
+            new AndExpression(this),
+            new NotExpression(this),
+            new LessThanExpression(),
+            new GreaterThanExpression(),
+            new EqualExpression()
+    );
 
     public Predicate<Record> parse(String query) {
         for (Expression expression : expressions)
