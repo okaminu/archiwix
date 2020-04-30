@@ -11,12 +11,12 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class OrQueryParserTest {
+class OrQueryParserTest {
 
     private final QueryParser queryParser = new QueryParser();
 
     @Test
-    public void parsesOR() {
+    void parsesOR() {
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
         Record redRecord = new Record("redId");
@@ -28,7 +28,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfNOT() {
+    void parsesORCompositeOfNOT() {
         Record redRecord = new Record("redId");
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
@@ -40,7 +40,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfDoubleNOT() {
+    void parsesORCompositeOfDoubleNOT() {
         Record redRecord = new Record("redId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
         Record blueRecord = new Record("blueId", "", "", 10);
@@ -52,7 +52,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfLESSWithGREATER() {
+    void parsesORCompositeOfLESSWithGREATER() {
         Record redRecord = new Record("redId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
         Record blueRecord = new Record("blueId", "", "", 10);
@@ -64,7 +64,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfSingleOR() {
+    void parsesORCompositeOfSingleOR() {
         Record blueRecord = new Record("blueId", "", "", 1);
         Record yellowRecord = new Record("yellowId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
@@ -77,7 +77,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfDoubleOR() {
+    void parsesORCompositeOfDoubleOR() {
         Record blueRecord = new Record("blueId", "", "", 1);
         Record yellowRecord = new Record("yellowId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
@@ -100,7 +100,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfAND() {
+    void parsesORCompositeOfAND() {
         Record blueRecord = new Record("blueId", "RandomTitle", "RandomContent", 1);
         Record yellowRecord = new Record("yellowId", "RandomTitle", "RandomContent", 2);
         Record redRecord = new Record("redId", "SomeTitle", "SomeContent", 7);
@@ -121,7 +121,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void parsesORCompositeOfANDWithNOT() {
+    void parsesORCompositeOfANDWithNOT() {
         Record blueRecord = new Record("blueId", "RandomTitle", "RandomContent", 1);
         Record yellowRecord = new Record("yellowId", "RandomTitle", "RandomContent", 2);
         Record redRecord = new Record("redId", "SomeTitle", "SomeContent", 7);
@@ -142,7 +142,7 @@ public class OrQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenQueryIsInvalid() {
+    void throwsExceptionWhenQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrows(InvalidQueryException.class, () -> filterRecords("OR(views,123)", record));

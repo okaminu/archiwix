@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RecordServiceTest {
+class RecordServiceTest {
 
     @Mock(lenient = true)
     private QueryParser queryParserStub;
@@ -23,20 +23,20 @@ public class RecordServiceTest {
     private RecordService recordService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         recordService = new RecordService(queryParserStub);
         when(queryParserStub.parse("QUERY")).thenReturn(record -> true);
     }
 
     @Test
-    public void retrievesEmptyRecord() {
+    void retrievesEmptyRecord() {
         Set<Record> actualRecords = recordService.find("QUERY");
 
         assertEquals(of(), actualRecords);
     }
 
     @Test
-    public void appendsRecordsToExistingOnes() {
+    void appendsRecordsToExistingOnes() {
         Record record1 = new Record("xbox", "Title");
         Record record2 = new Record("playstation", "Title");
         recordService.save(record1);
@@ -48,7 +48,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void storesUniqueRecordsByInstance() {
+    void storesUniqueRecordsByInstance() {
         Record record = new Record();
         recordService.save(record, record);
 
@@ -58,7 +58,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void storesUniqueRecordsById() {
+    void storesUniqueRecordsById() {
         Record record = new Record("someId");
         Record duplicateRecord = new Record("someId");
         recordService.save(record, duplicateRecord);
@@ -69,7 +69,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void overwritesRecordWhenNewRecordIsWithSameId() {
+    void overwritesRecordWhenNewRecordIsWithSameId() {
         Record record = new Record();
         Record updatedRecord = new Record();
         recordService.save(record);
@@ -82,7 +82,7 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void retrievesRecordsByQuery() {
+    void retrievesRecordsByQuery() {
         RecordService service = new RecordService(new QueryParser());
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");

@@ -12,7 +12,7 @@ public abstract class CompositeExpression extends Expression {
 
     private final QueryParser queryParser;
 
-    protected CompositeExpression(QueryParser queryParser) {
+    CompositeExpression(QueryParser queryParser) {
         this.queryParser = queryParser;
     }
 

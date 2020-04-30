@@ -20,13 +20,13 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class StoreControllerTest {
+class StoreControllerTest {
 
     private EmbeddedServer server;
     private HttpClient client;
 
     @BeforeEach
-    public void setupServer() {
+    void setupServer() {
         server = ApplicationContext.run(EmbeddedServer.class);
         client = server
                 .getApplicationContext()
@@ -34,13 +34,13 @@ public class StoreControllerTest {
     }
 
     @AfterEach
-    public void stopServer() {
+    void stopServer() {
         server.stop();
         client.stop();
     }
 
     @Test
-    public void providesBadRequestStatusOnInvalidQuery() {
+    void providesBadRequestStatusOnInvalidQuery() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
         store(greenRecord, blueRecord);
@@ -53,14 +53,14 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void providesEmptyResult() {
+    void providesEmptyResult() {
         Set<Record> actualRecords = retrieve("EQUAL(id,\"green-id123\")");
 
         assertEquals(of(), actualRecords);
     }
 
     @Test
-    public void findsByEQUAL() {
+    void findsByEQUAL() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
@@ -71,7 +71,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByOR() {
+    void findsByOR() {
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
         Record redRecord = new Record("redId");
@@ -84,7 +84,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByAND() {
+    void findsByAND() {
         Record greenRecord = new Record("greenId", "RandomTitle");
         Record blueRecord = new Record("blueId", "RandomTitle");
         store(greenRecord, blueRecord);
@@ -96,7 +96,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByNOT() {
+    void findsByNOT() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
         store(greenRecord, blueRecord);
@@ -107,7 +107,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByGREATER() {
+    void findsByGREATER() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
         store(greenRecord, blueRecord);
@@ -118,7 +118,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByLESS() {
+    void findsByLESS() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
         store(greenRecord, blueRecord);
@@ -129,7 +129,7 @@ public class StoreControllerTest {
     }
 
     @Test
-    public void findsByORCompositeOfOR() {
+    void findsByORCompositeOfOR() {
         Record blueRecord = new Record("blueId", "", "", 1);
         Record yellowRecord = new Record("yellowId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);

@@ -11,12 +11,12 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class EqualQueryParserTest {
+class EqualQueryParserTest {
 
     private final QueryParser queryParser = new QueryParser();
 
     @Test
-    public void parsesEQUALWithIdField() {
+    void parsesEQUALWithIdField() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
@@ -26,7 +26,7 @@ public class EqualQueryParserTest {
     }
 
     @Test
-    public void parsesEQUALWithTitleField() {
+    void parsesEQUALWithTitleField() {
         Record greenRecord = new Record("greenId", "Green Title");
         Record blueRecord = new Record("blueId", "Blue Title");
 
@@ -36,7 +36,7 @@ public class EqualQueryParserTest {
     }
 
     @Test
-    public void parsesEQUALWithContentField() {
+    void parsesEQUALWithContentField() {
         Record greenRecord = new Record("greenId", "", "Green Content");
         Record blueRecord = new Record("blueId", "", "Blue Content");
 
@@ -46,7 +46,7 @@ public class EqualQueryParserTest {
     }
 
     @Test
-    public void parsesEQUALWithViewsField() {
+    void parsesEQUALWithViewsField() {
         Record greenRecord = new Record("greenId", "", "", 123);
         Record blueRecord = new Record("blueId", "", "", 321);
 
@@ -56,7 +56,7 @@ public class EqualQueryParserTest {
     }
 
     @Test
-    public void parsesEQUALWithTimestampField() {
+    void parsesEQUALWithTimestampField() {
         Record greenRecord = new Record("greenId", "", "", 0, 1333333333);
         Record blueRecord = new Record("blueId", "", "", 0, 1222222222);
 
@@ -66,7 +66,7 @@ public class EqualQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenQueryIsInvalid() {
+    void throwsExceptionWhenQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("", record);

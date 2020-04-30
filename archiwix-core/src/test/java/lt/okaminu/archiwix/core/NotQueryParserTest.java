@@ -11,12 +11,12 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class NotQueryParserTest {
+class NotQueryParserTest {
 
     private final QueryParser queryParser = new QueryParser();
 
     @Test
-    public void parsesNOT() {
+    void parsesNOT() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
@@ -26,7 +26,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfNOT() {
+    void parsesNOTOfNOT() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
@@ -36,7 +36,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfMultipleNOTs() {
+    void parsesNOTOfMultipleNOTs() {
         Record greenRecord = new Record("green-id123");
         Record blueRecord = new Record("blue-id123");
 
@@ -46,7 +46,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfLESS() {
+    void parsesNOTOfLESS() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -56,7 +56,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfGREATER() {
+    void parsesNOTOfGREATER() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -66,7 +66,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfAND() {
+    void parsesNOTOfAND() {
         Record redRecord = new Record("redId", "RandomTitle");
         Record greenRecord = new Record("greenId", "SomeTitle");
 
@@ -77,7 +77,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void parsesNOTOfOR() {
+    void parsesNOTOfOR() {
         Record redRecord = new Record("redId");
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
@@ -89,7 +89,7 @@ public class NotQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenQueryIsInvalid() {
+    void throwsExceptionWhenQueryIsInvalid() {
         assertThrows(InvalidQueryException.class, () -> filterRecords("NOT(views,123)"));
     }
 

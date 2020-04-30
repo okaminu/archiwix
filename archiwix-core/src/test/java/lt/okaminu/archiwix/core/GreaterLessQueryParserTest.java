@@ -11,12 +11,12 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class GreaterLessQueryParserTest {
+class GreaterLessQueryParserTest {
 
     private final QueryParser queryParser = new QueryParser();
 
     @Test
-    public void parsesGREATERWithViewsField() {
+    void parsesGREATERWithViewsField() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -26,7 +26,7 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void parsesGREATERWithTimestampField() {
+    void parsesGREATERWithTimestampField() {
         Record greenRecord = new Record("greenId", "", "", 0, 200);
         Record blueRecord = new Record("blueId", "", "", 0, 300);
 
@@ -36,7 +36,7 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenGREATERQueryIsInvalid() {
+    void throwsExceptionWhenGREATERQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("GREATER_THAN(id,\"green-id123\")", record);
@@ -47,7 +47,7 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void parsesLESSWithViewsField() {
+    void parsesLESSWithViewsField() {
         Record greenRecord = new Record("greenId", "", "", 10);
         Record blueRecord = new Record("blueId", "", "", 5);
 
@@ -57,7 +57,7 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void parsesLESSWithTimestampField() {
+    void parsesLESSWithTimestampField() {
         Record greenRecord = new Record("greenId", "", "", 0, 200);
         Record blueRecord = new Record("blueId", "", "", 0, 300);
 
@@ -67,7 +67,7 @@ public class GreaterLessQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenLESSQueryIsInvalid() {
+    void throwsExceptionWhenLESSQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("LESS_THAN(id,\"green-id123\")", record);

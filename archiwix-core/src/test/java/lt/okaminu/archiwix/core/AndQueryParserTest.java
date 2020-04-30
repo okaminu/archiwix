@@ -11,12 +11,12 @@ import static java.util.Set.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AndQueryParserTest {
+class AndQueryParserTest {
 
     private final QueryParser queryParser = new QueryParser();
 
     @Test
-    public void parsesAND() {
+    void parsesAND() {
         Record greenRecord = new Record("greenId", "RandomTitle");
         Record blueRecord = new Record("blueId", "RandomTitle");
 
@@ -27,7 +27,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfNOT() {
+    void parsesANDCompositeOfNOT() {
         Record redRecord = new Record("redId", "RandomTitle");
         Record greenRecord = new Record("greenId", "RandomTitle");
         Record blueRecord = new Record("blueId", "SomeTitle");
@@ -39,7 +39,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfDoubleNOT() {
+    void parsesANDCompositeOfDoubleNOT() {
         Record redRecord = new Record("redId");
         Record greenRecord = new Record("greenId");
         Record blueRecord = new Record("blueId");
@@ -51,7 +51,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfLESSWithGREATER() {
+    void parsesANDCompositeOfLESSWithGREATER() {
         Record redRecord = new Record("redId", "", "", 2);
         Record greenRecord = new Record("greenId", "", "", 5);
         Record blueRecord = new Record("blueId", "", "", 10);
@@ -63,7 +63,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfSingleAND() {
+    void parsesANDCompositeOfSingleAND() {
         Record greenRecord = new Record("greenId", "RandomTitle", "BoringContent", 5);
         Set<Record> records = of(
                 new Record("yellowId", "RandomTitle", "InterestingContent"),
@@ -80,7 +80,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfDoubleAND() {
+    void parsesANDCompositeOfDoubleAND() {
         Record greenRecord = new Record("greenId", "RandomTitle", "BoringContent", 5);
         Set<Record> records = of(
                 new Record("yellowId", "RandomTitle", "InterestingContent"),
@@ -99,7 +99,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfOR() {
+    void parsesANDCompositeOfOR() {
         Record blueRecord = new Record("blueId", "", "", 1);
         Record whiteRecord = new Record("whiteId", "", "", 10);
         Set<Record> records = of(
@@ -119,7 +119,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void parsesANDCompositeOfORWithNOT() {
+    void parsesANDCompositeOfORWithNOT() {
         Record blueRecord = new Record("blueId", "", "", 1);
         Record whiteRecord = new Record("whiteId", "", "", 10);
         Set<Record> records = of(
@@ -139,7 +139,7 @@ public class AndQueryParserTest {
     }
 
     @Test
-    public void throwsExceptionWhenQueryIsInvalid() {
+    void throwsExceptionWhenQueryIsInvalid() {
         Record record = new Record("green-id123");
 
         assertThrowsInvalidQueryException("AND(views,123)", record);
