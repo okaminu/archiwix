@@ -5,6 +5,7 @@ import lt.okaminu.archiwix.core.parser.QueryParser;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import static java.util.List.of;
 
@@ -23,6 +24,7 @@ public final class RecordService {
     }
 
     public Set<Record> find(String query) {
-        return records.stream().filter(queryParser.parse(query)).collect(Collectors.toSet());
+        Predicate<Record> predicate = queryParser.parse(query);
+        return records.stream().filter(predicate).collect(Collectors.toSet());
     }
 }
